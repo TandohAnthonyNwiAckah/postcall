@@ -1,9 +1,11 @@
-package com.tanacom.postcall
+package com.tanacom.postcall.ui.viewmodel
 
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.tanacom.postcall.data.model.Post
+import com.tanacom.postcall.data.repository.PostRepository
 import kotlinx.coroutines.launch
 
 

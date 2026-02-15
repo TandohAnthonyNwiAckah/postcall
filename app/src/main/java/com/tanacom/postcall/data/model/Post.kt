@@ -1,4 +1,4 @@
-package com.tanacom.postcall
+package com.tanacom.postcall.data.model
 
 data class Post(
     val body: String,

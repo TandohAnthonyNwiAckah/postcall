@@ -1,4 +1,4 @@
-package com.tanacom.postcall
+package com.tanacom.postcall.ui.view
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -28,8 +28,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.tanacom.postcall.data.model.Post
 import com.tanacom.postcall.ui.theme.PostCallTheme
+import com.tanacom.postcall.ui.viewmodel.PostViewModel
+import com.tanacom.postcall.ui.viewmodel.UiState
 
 class MainActivity : ComponentActivity() {
 
@@ -92,14 +96,18 @@ fun ErrorView(message: String) {
 }
 
 @Composable
-fun PostList(posts: List<Post>, modifier: Modifier = Modifier) {
+fun PostList(posts: List<Post>) {
     LazyColumn(
-        modifier = modifier
+        modifier = Modifier
             .fillMaxSize()
             .padding(8.dp)
     ) {
 
-        items(posts) { post ->
+        items(
+            posts,
+            key = { post -> post.id }
+        )
+        { post ->
 
             Card(
                 modifier = Modifier
@@ -142,16 +150,61 @@ fun PostList(posts: List<Post>, modifier: Modifier = Modifier) {
     }
 }
 
-
 @Composable
 fun PostScreen(postViewModel: PostViewModel, modifier: Modifier = Modifier) {
+    PostScreenContent(uiState = postViewModel.state.value, modifier = modifier)
+}
 
-    val state = postViewModel.state.value
 
-    when (state) {
-        is UiState.Loading -> LoadingView()
-        is UiState.Success -> PostList(posts = state.posts)
-        is UiState.Error -> ErrorView(message = state.message)
+@Composable
+fun PostScreenContent(uiState: UiState, modifier: Modifier = Modifier) {
+    Box(modifier = modifier.fillMaxSize()) {
+        when (uiState) {
+            is UiState.Loading -> LoadingView()
+            is UiState.Success -> PostList(posts = uiState.posts)
+            is UiState.Error -> ErrorView(message = uiState.message)
+        }
     }
+}
 
+
+@Preview(showBackground = true)
+@Composable
+fun PostScreenSuccessPreview() {
+    PostCallTheme {
+        PostScreenContent(
+            uiState = UiState.Success(
+                posts = listOf(
+                    Post(
+                        userId = 1,
+                        id = 1,
+                        title = "sunt aut facere repellat provident occaecati excepturi optio reprehenderit",
+                        body = "quia et suscipit\nsuscipit recusandae consequuntur expedita et cum\nreprehenderit molestiae ut ut quas totam\nnostrum rerum est autem sunt rem eveniet architecto"
+                    ),
+                    Post(
+                        userId = 1,
+                        id = 2,
+                        title = "qui est esse",
+                        body = "est rerum tempore vitae\nsequi sint nihil reprehenderit dolor beatae ea dolores neque\nfugiat blanditiis voluptate porro vel nihil molestiae ut reiciendis\nqui aperiam non debitis possimus qui neque nisi nulla"
+                    )
+                )
+            )
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun PostScreenLoadingPreview() {
+    PostCallTheme {
+        PostScreenContent(uiState = UiState.Loading)
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun PostScreenErrorPreview() {
+    PostCallTheme {
+        PostScreenContent(uiState = UiState.Error(message = "Something went wrong"))
+    }
 }

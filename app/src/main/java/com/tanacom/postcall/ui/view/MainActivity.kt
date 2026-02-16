@@ -30,6 +30,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.tanacom.postcall.data.model.Post
 import com.tanacom.postcall.ui.theme.PostCallTheme
 import com.tanacom.postcall.ui.viewmodel.PostViewModel
@@ -41,6 +42,9 @@ class MainActivity : ComponentActivity() {
 
     @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
+
+        installSplashScreen()
+
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
@@ -61,8 +65,10 @@ class MainActivity : ComponentActivity() {
                                     containerColor = Color.Red
                                 )
                             )
-                        }
-                    ) { innerPadding ->
+                        },
+
+                        )
+                    { innerPadding ->
 
                         PostScreen(
                             postViewModel = postViewModel,
@@ -71,10 +77,7 @@ class MainActivity : ComponentActivity() {
 
 
                     }
-
-
                 }
-
             }
         }
     }
@@ -155,7 +158,6 @@ fun PostScreen(postViewModel: PostViewModel, modifier: Modifier = Modifier) {
     PostScreenContent(uiState = postViewModel.state.value, modifier = modifier)
 }
 
-
 @Composable
 fun PostScreenContent(uiState: UiState, modifier: Modifier = Modifier) {
     Box(modifier = modifier.fillMaxSize()) {
@@ -208,3 +210,6 @@ fun PostScreenErrorPreview() {
         PostScreenContent(uiState = UiState.Error(message = "Something went wrong"))
     }
 }
+
+
+

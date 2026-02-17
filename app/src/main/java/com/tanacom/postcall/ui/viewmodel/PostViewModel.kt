@@ -46,4 +46,13 @@ class PostViewModel : ViewModel() {
         }
     }
 
+
+    fun getPostById(postId: Int): Post? {
+        return when (val state = state.value) {
+            is UiState.Success -> state.posts.find { it.id == postId }
+            else -> null
+        }
+    }
+
+
 }

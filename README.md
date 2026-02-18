@@ -62,3 +62,4 @@ The application follows the MVVM (Model-View-ViewModel) architecture pattern.
 * **OkHttp Logging Interceptor**: For logging HTTP request and response data.
 * **Kotlin Coroutines**: For managing background threads with simplified code and reducing needs for
   callbacks.
+* **Hilt**: For dependency injection.

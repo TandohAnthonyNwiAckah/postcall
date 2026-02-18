@@ -1,6 +1,8 @@
-package com.tanacom.postcall.ui.view
+package com.tanacom.postcall.ui.view.post
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -35,21 +37,22 @@ fun ErrorView(message: String) {
 }
 
 @Composable
-fun PostList(posts: List<Post>) {
+fun PostList(posts: List<Post>, onPostClick: (Post) -> Unit) {
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
             .padding(8.dp)
     ) {
-        items(posts, key = { post -> post.id }) { post ->
+        items(posts, key = { it.id }) { post ->
             Card(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(6.dp),
+                    .padding(6.dp)
+                    .clickable { onPostClick(post) }, // add click here
                 elevation = CardDefaults.cardElevation(defaultElevation = 6.dp),
                 colors = CardDefaults.cardColors(containerColor = Color.White)
             ) {
-                androidx.compose.foundation.layout.Column(modifier = Modifier.padding(12.dp)) {
+                Column(modifier = Modifier.padding(12.dp)) {
                     Text(
                         text = post.title,
                         color = Color.Red,
@@ -70,3 +73,4 @@ fun PostList(posts: List<Post>) {
         }
     }
 }
+

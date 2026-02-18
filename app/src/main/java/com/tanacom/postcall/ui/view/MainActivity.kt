@@ -18,10 +18,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import com.tanacom.postcall.ui.navigation.NavigationScreen
 import com.tanacom.postcall.ui.theme.PostCallTheme
 import com.tanacom.postcall.ui.viewmodel.PostViewModel
 import dagger.hilt.android.AndroidEntryPoint
-
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -30,11 +30,10 @@ class MainActivity : ComponentActivity() {
 
     @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
-
         installSplashScreen()
-
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+
         setContent {
             PostCallTheme {
                 Surface(modifier = Modifier.fillMaxSize()) {
@@ -48,16 +47,15 @@ class MainActivity : ComponentActivity() {
                                         fontWeight = FontWeight.Bold,
                                         color = Color.White
                                     )
-                                }, colors = TopAppBarDefaults.topAppBarColors(
-                                    containerColor = Color.Red
-                                )
+                                },
+                                colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.Red)
                             )
-                        },
-
-                        ) { innerPadding ->
-
-                        PostScreen(
-                            postViewModel = postViewModel, modifier = Modifier.padding(innerPadding)
+                        }
+                    ) { innerPadding ->
+                        // call the NavigationScreen
+                        NavigationScreen(
+                            postViewModel = postViewModel,
+                            modifier = Modifier.padding(innerPadding)
                         )
                     }
                 }
@@ -65,17 +63,3 @@ class MainActivity : ComponentActivity() {
         }
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-

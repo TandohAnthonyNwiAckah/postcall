@@ -1,6 +1,8 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.ksp)
+    alias(libs.plugins.hilt)
 }
 
 android {
@@ -10,7 +12,6 @@ android {
             minorApiLevel = 1
         }
     }
-
     defaultConfig {
         applicationId = "com.tanacom.postcall"
         minSdk = 24
@@ -20,7 +21,6 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
-
     buildTypes {
         release {
             isMinifyEnabled = false
@@ -38,6 +38,8 @@ android {
         compose = true
         buildConfig = true
     }
+
+
 }
 
 dependencies {
@@ -60,12 +62,17 @@ dependencies {
 
     // Coroutines
     implementation(libs.kotlinx.coroutines.android)
+    implementation(libs.kotlinx.coroutines.test)
 
     // Splashscreen
     implementation(libs.androidx.core.splashscreen)
 
     // Navigation
     implementation(libs.androidx.navigation.compose)
+
+    // Hilt
+    implementation(libs.hilt)
+    ksp(libs.hilt.compiler) // Use `ksp` instead of `kapt`
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

@@ -1,58 +1,52 @@
 package com.tanacom.postcall.ui.viewmodel
 
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.tanacom.postcall.data.model.Post
 import com.tanacom.postcall.data.repository.PostRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-
-sealed class UiState {
-    object Loading : UiState()
-    data class Success(val posts: List<Post>) : UiState()
-    data class Error(val message: String) : UiState()
+sealed class PostUiState {
+    object Loading : PostUiState()
+    data class Success(val posts: List<Post>) : PostUiState()
+    data class Error(val message: String) : PostUiState()
 
 }
 
-class PostViewModel : ViewModel() {
 
-    private val repository = PostRepository()
+@HiltViewModel
+class PostViewModel @Inject constructor(private val repository: PostRepository) : ViewModel() {
 
-    private val internalState: MutableState<UiState> = mutableStateOf(UiState.Loading)
+    //   private val repository = PostRepository()
 
-    val state: MutableState<UiState> = internalState
+    private val internalState = MutableStateFlow<PostUiState>(PostUiState.Loading)
+
+    val state: StateFlow<PostUiState> = internalState.asStateFlow()
 
 
     init {
         fetchPosts()
     }
 
-
     private fun fetchPosts() {
 
         viewModelScope.launch {
 
-            internalState.value = UiState.Loading
+            internalState.value = PostUiState.Loading
 
             try {
                 val posts = repository.getPosts()
-                internalState.value = UiState.Success(posts)
+                internalState.value = PostUiState.Success(posts)
             } catch (e: Exception) {
-                internalState.value = UiState.Error(e.message ?: "Unknown error")
+                internalState.value = PostUiState.Error(e.message ?: "Unknown error")
 
             }
         }
     }
-
-
-    fun getPostById(postId: Int): Post? {
-        return when (val state = state.value) {
-            is UiState.Success -> state.posts.find { it.id == postId }
-            else -> null
-        }
-    }
-
 
 }

@@ -8,5 +8,4 @@ interface APIService {
     @GET("posts")
     suspend fun getPosts(): List<Post>
 
-
 }
